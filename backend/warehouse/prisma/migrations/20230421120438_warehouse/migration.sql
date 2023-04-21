@@ -1,0 +1,30 @@
+-- CreateTable
+CREATE TABLE "Warehouse" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "remove" BOOLEAN NOT NULL DEFAULT false
+);
+
+-- CreateTable
+CREATE TABLE "Zone" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "remove" BOOLEAN NOT NULL DEFAULT false,
+    "warehouseId" INTEGER NOT NULL,
+    CONSTRAINT "Zone_warehouseId_fkey" FOREIGN KEY ("warehouseId") REFERENCES "Warehouse" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Shelve" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "shelveName" TEXT NOT NULL,
+    "remove" BOOLEAN NOT NULL DEFAULT false,
+    "zoneId" INTEGER NOT NULL,
+    CONSTRAINT "Shelve_zoneId_fkey" FOREIGN KEY ("zoneId") REFERENCES "Zone" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Item" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "remove" BOOLEAN NOT NULL DEFAULT false,
+    "shelveId" INTEGER NOT NULL,
+    CONSTRAINT "Item_shelveId_fkey" FOREIGN KEY ("shelveId") REFERENCES "Shelve" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
