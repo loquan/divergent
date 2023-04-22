@@ -6,32 +6,53 @@ type Data = {
 }
 const prisma = new PrismaClient();
 
+
+function parseArrayJson(stacks:any){
+
+  let arrayData:any[]=[];
+  for( let data in stacks){
+    arrayData.push(stacks[data])
+  }
+  return arrayData;
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
   
-  let zone : any ;  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // need this be set because the sever and client are running on the same machine
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  let zones : any ;  
   //let createData = await prisma.warehouse.create({data:{}});
   //let createData = await prisma.zone.create({data:{warehouseId:2}})
-  let WerehouseId:number =  parseInt( req.body.warehouseId);;
+
+
+  let WerehouseId:number;
+  
+  if(req.body.warehouseId!=null)
+    WerehouseId=  parseInt( req.body.warehouseId);
+  else 
+    WerehouseId=  parseInt( req.query.warehouseId);
+
   switch (req.method)
   { 
     case 'POST':        
         let createData = await prisma.zone.create({data:{warehouseId:WerehouseId}})
-        zone =  await prisma.zone.findMany({where: {warehouseId:WerehouseId,remove: false
+        
+        zones =  await prisma.zone.findMany({where: {warehouseId:WerehouseId,remove: false
         }});
-        res.status(200).json(zone);
+        return res.status(200).json(zones);
     break;  
     
     case 'GET':
-                 
-        zone =  await prisma.zone.findMany({where: {warehouseId:1,remove: false
+       
+        zones =  await prisma.zone.findMany({where: {warehouseId:WerehouseId,remove: false
         }})  
-        let json = Object.assign({}, zone);
-        
-
-        res.status(200).json(zone);
+        let json = Object.assign({}, zones);
+        //let json=parseArrayJson(zones);
+        return res.status(200).json(json);
     break;    
     
     //delete

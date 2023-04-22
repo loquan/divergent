@@ -35,7 +35,8 @@ export class WarehouseDataService {
     return this.http.post<any[]>('http://localhost:3000/api/zone',params);
    }
 
-   getZonehouse(WarehouseId:number):Observable<any>{
+
+   getZone(WarehouseId:number):Observable<any>{
     const params = new HttpParams()
     .set('warehouseId', WarehouseId);
 

@@ -14,6 +14,12 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // need this be set because the sever and client are running on the same machine
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  
   let shevles : any ;  
   let newName: string="test2";
   let result =  await prisma.shelve.findMany({where: {shelveName:"test",remove: false

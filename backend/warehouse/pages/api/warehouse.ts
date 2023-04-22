@@ -30,7 +30,7 @@ export default async function handler(
         let createData = await prisma.warehouse.create({data:{}});
         warehouses =  await prisma.warehouse.findMany({where: {remove: false
         }});
-        res.status(200).json(warehouses);
+        return res.status(200).json(warehouses);
     break;  
     case 'GET':
          
