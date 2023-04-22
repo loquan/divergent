@@ -8,7 +8,7 @@
 <div *ngFor="let warehouse of warehouses;let i=index">
   <div class="example-button-row">
     <button mat-raised-button (click)="toggleWarehouse(i)">show zones for warehouse:{{warehouse.id}}</button>
-    <button mat-raised-button color="warn" (click)="deleteWarehouse(warehouse.id)" >delete warehouse:{{warehouse.id}}</button>
+    <button mat-raised-button color="warn" (click)="deleteWarehousePost(warehouse.id)" >delete warehouse:{{warehouse.id}}</button>
 
    </div><br>
     <div *ngIf="warehouses[i].visible" style="margin-left:20px;border-color:black;"  >
@@ -22,7 +22,7 @@
               <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button>
             </td>
             <td>
-              <button mat-raised-button  color="warn" (click)="deleteZone(i,k)">delete zone:{{zone.id}}</button>
+              <button mat-raised-button  color="warn" (click)="deleteZonePost(i,k)">delete zone:{{zone.id}}</button>
             </td>
           </tr>
           </table>

@@ -20,7 +20,7 @@ export class CreateComponent implements OnInit {
 
   ngOnInit(){
     console.log("init");
-
+    this.getWarehouse();
   }
   addWarehouse(){
       this.service.addWarehouse().subscribe( data =>{
@@ -65,14 +65,38 @@ export class CreateComponent implements OnInit {
           console.error('Here is the error message', error);
       }
      });
-     await this.getWarehouse();
+     this.getWarehouse();
+     console.log("end deleting");
+
+  }
+  deleteWarehousePost (id:number){
+    console.log("start deleting");
+      this.service.deleteWarehousePost(id).subscribe(data =>{
+      try {
+        console.log("dddelete"+data);
+        let temp=data;
+        this.getWarehouse();
+
+      }
+      catch (error) {
+          console.error('Here is the error message', error);
+      }
+     });
+
      console.log("end deleting");
 
   }
 
-
   toggleWarehouse(index:number){
     this.warehouses[index].visible=!this.warehouses[index].visible;
+    if(this.warehouses[index].visible==true)
+    {
+      if(this.warehouses[index].zone==null)
+      {
+          this.getZone(this.warehouses[index].id,index);
+      }
+
+    }
 
   }
 
@@ -123,7 +147,20 @@ export class CreateComponent implements OnInit {
       let finish=data;
     });
 
-    let done= await this.getZone(warehouseId,warehouseIndex);
+    this.getZone(warehouseId,warehouseIndex);
+
+
+  }
+
+   deleteZonePost(warehouseIndex:number,zoneIndex:number){
+    let warehouseId=this.warehouses[warehouseIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zone[zoneIndex].id;
+    this.service.deleteZonePost(warehouseId,zoneId).subscribe( data=>{
+      let finish=data;
+      this.getZone(warehouseId,warehouseIndex);
+    });
+
+
 
 
   }

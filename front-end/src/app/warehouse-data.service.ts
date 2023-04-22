@@ -25,7 +25,13 @@ export class WarehouseDataService {
     return this.http.delete<any>('http://localhost:3000/api/warehouse', { params });
    }
 
+   deleteWarehousePost(idNumber:number):Observable<any>{
+    const params = new HttpParams()
+    .set('id', idNumber)
+    .set('command', "DELETE");
 
+    return this.http.post<any[]>('http://localhost:3000/api/warehouse',params );
+   }
 
    addZone(WarehouseId:number){
 
@@ -50,4 +56,15 @@ export class WarehouseDataService {
 
      return this.http.delete<any>('http://localhost:3000/api/zone', { params });
     }
+
+    deleteZonePost(WarehouseId:number,idNumber:number):Observable<any>{
+      const params = new HttpParams()
+      .set('ZonedId', idNumber)
+      .set('command', "DELETE");
+
+      return this.http.post<any[]>('http://localhost:3000/api/zone',  params );
+     }
+
+
+
 }
