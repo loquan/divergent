@@ -34,16 +34,10 @@ export default async function handler(
     break;  
     case 'GET':
          
-        // const result = await prisma.warehouse.update({
-        //     where:{
-        //         id:1
-        //     },
-        //     data:{remove:true}
-        //     }
-        // )
+
         warehouses =  await prisma.warehouse.findMany({where: {remove: false
           }}); 
-        //console.log("data",werehouses)
+        
         
        
         let json = Object.assign({}, warehouses);
@@ -64,7 +58,7 @@ export default async function handler(
         
 
         
-        res.status(200).json({ name: 'finish' })
+        res.status(200).json({ name: 'John Doe' })
        
         //const result = await prisma.$queryRaw`Update remove =false FROM warehouse where id=1`
 

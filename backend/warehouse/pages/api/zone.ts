@@ -13,32 +13,33 @@ export default async function handler(
   
   let zone : any ;  
   //let createData = await prisma.warehouse.create({data:{}});
-  let createData = await prisma.zone.create({data:{warehouseId:2}})
+  //let createData = await prisma.zone.create({data:{warehouseId:2}})
+  let WerehouseId:number =  parseInt( req.body.warehouseId);;
   switch (req.method)
   { 
-    case 'POST':
-        let createData = await prisma.zone.create({data:{warehouseId:2}})
+    case 'POST':        
+        let createData = await prisma.zone.create({data:{warehouseId:WerehouseId}})
+        zone =  await prisma.zone.findMany({where: {warehouseId:WerehouseId,remove: false
+        }});
+        res.status(200).json(zone);
     break;  
+    
     case 'GET':
-         
-        /*const result = await prisma.zone.update({
-            where:{
-                id:1,
-                warehouseId:2,
-            },
-                data:{remove:true}
-            }
-        )*/
-        zone =  await prisma.zone.findMany({where: {remove: false
-          }}); 
-        //console.log("data",werehouses)
+                 
+        zone =  await prisma.zone.findMany({where: {warehouseId:1,remove: false
+        }})  
+        let json = Object.assign({}, zone);
+        
+
         res.status(200).json(zone);
     break;    
-    case 'DELETE':
+    
+    //delete
+    case 'OPTIONS':
+        let zoneId:number =  parseInt( req.query.zoneId);;
         const result2 = await prisma.zone.update({
             where:{
-                id:1,
-                
+                id:zoneId,                
             },
              data:{remove:true}
             }

@@ -10,7 +10,7 @@ import { ChangeDetectorRef }  from '@angular/core'
 })
 export class CreateComponent implements OnInit {
 
-  warehouses:WarehouseObject[]=[{id:1,visible:false},{id:2,visible:false}];
+  warehouses:WarehouseObject[]=[];
   constructor(private service:WarehouseDataService,private http:HttpClient){
 
   }
@@ -26,6 +26,27 @@ export class CreateComponent implements OnInit {
         this.warehouses=info;
 
       })
+  }
+
+
+
+  getWarehouse(){
+
+      this.service.getWarehouse().subscribe(data =>{
+        try {
+              this.warehouses=[];
+              for(let ware in data) {
+                console.log(" :"+ware);
+                this.warehouses.push(data[ware]);
+
+              }
+        }
+        catch (error) {
+            console.error('Here is the error message', error);
+        }
+
+       });
+
   }
 
   deleteWarehouse (id:number){
@@ -45,22 +66,24 @@ export class CreateComponent implements OnInit {
      console.log("end deleting");
 
   }
-  getWarehouse(){
 
-      this.service.getWarehouse().subscribe(data =>{
-        try {
-              this.warehouses=[];
-              for(let ware in data) {
-                console.log(" :"+ware);
-                this.warehouses.push(data[ware]);
 
-              }
-        }
-        catch (error) {
-            console.error('Here is the error message', error);
-        }
+  toggleWarehouse(index:number){
+    this.warehouses[index].visible=!this.warehouses[index].visible;
 
-       });
+  }
+
+  addZone(WareHouseId:number)
+  {
+
+    this.service.addZone(WareHouseId).subscribe( data =>{
+      let info=data;
+      this.warehouses=info;
+
+    })
+
+  }
+  getZone(WareHouseId:number){
 
   }
 }

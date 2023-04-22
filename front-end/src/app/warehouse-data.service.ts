@@ -24,4 +24,29 @@ export class WarehouseDataService {
 
     return this.http.delete<any>('http://localhost:3000/api/warehouse', { params });
    }
+
+
+
+   addZone(WarehouseId:number){
+
+    const params = new HttpParams()
+    .set('warehouseId', WarehouseId);
+
+    return this.http.post<any[]>('http://localhost:3000/api/zone',params);
+   }
+
+   getZonehouse(WarehouseId:number):Observable<any>{
+    const params = new HttpParams()
+    .set('warehouseId', WarehouseId);
+
+     return this.http.get<any[]>('http://localhost:3000/api/zone',{params});
+    }
+
+    deleteZone(WarehouseId:number,idNumber:number):Observable<any>{
+     const params = new HttpParams()
+     .set('warehouseId', idNumber)
+     .set('zoneId',idNumber);
+
+     return this.http.delete<any>('http://localhost:3000/api/warehouse', { params });
+    }
 }

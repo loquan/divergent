@@ -26,8 +26,9 @@ export default async function handler(
   { 
     case 'POST':
         
-        let createData = await prisma.warehouse.create({data:{}});
-        warehouses =  await prisma.warehouse.findMany({where: {remove: false
+    
+        let createData = await prisma.shelve.create({data:{shelveId:}});
+        warehouses =  await prisma.shelve.findMany({where: {remove: false
         }});
         res.status(200).json(warehouses);
     break;  
@@ -39,7 +40,7 @@ export default async function handler(
         //console.log("data",werehouses)
         res.status(200).json(shevles);
     break;    
-    case 'DELETE':
+    case 'OPTIONS':
         const result2 = await prisma.shelve.update({
             where:{
                 id:1
