@@ -1,25 +1,37 @@
 <p>create works!</p>
 <div class="example-button-row">
-  <button mat-button>Basic</button>
-  <button mat-button color="primary">Primary</button>
-  <button mat-button (click)="addWarehouse()" color="primary">Add New</button>
-  <button mat-button (click)="getWarehouse()" color="primary">Get Data</button>
+  <button class="light-button" mat-raised-button (click)="addWarehouse()" >Add New Warehouse</button>
+  <button mat-raised-button mat-button (click)="getWarehouse()" >Get Data</button>
 </div>
 
 
-<div  *ngFor="let warehouse of warehouses;let i=index">
-   <button (click)="toggleWarehouse(i)">show zones for warehouse:{{warehouse.id}}</button> <button (click)="deleteWarehouse(warehouse.id)" >delete warehouse:{{warehouse.id}}</button>
+<div *ngFor="let warehouse of warehouses;let i=index">
+  <div class="example-button-row">
+    <button mat-raised-button (click)="toggleWarehouse(i)">show zones for warehouse:{{warehouse.id}}</button>
+    <button mat-raised-button color="warn" (click)="deleteWarehouse(warehouse.id)" >delete warehouse:{{warehouse.id}}</button>
 
-   <br>
-    <div *ngIf="warehouses[i].visible" style="height:5000;margin-left:30px;width:500px">
-      <div><button (click)="addZone(warehouses[i].id,i)">Add Zone:</button></div>
-      <div><button (click)="getZone(warehouses[i].id,i)">Get Zone:</button></div>
+   </div><br>
+    <div *ngIf="warehouses[i].visible" style="margin-left:20px;border-color:black;"  >
 
-      <div  *ngFor="let zone of warehouses[i].zone;let k=index">
-        <button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button> <button (click)="deleteWarehouse(warehouse.id)" >showZone:{{zone.id}}</button>
+      <div class="example-button-row" >
+        <button mat-raised-button (click)="addZone(warehouses[i].id,i)">Add Zone:</button>
+        <button mat-raised-button (click)="getZone(warehouses[i].id,i)">Get Zone:</button>
+        <table>
+          <tr *ngFor="let zone of warehouses[i].zone;let k=index">
+            <td>
+              <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button>
+            </td>
+            <td>
+              <button mat-raised-button  color="warn" (click)="deleteZone(i,k)">delete zone:{{zone.id}}</button>
+            </td>
+          </tr>
+          </table>
+
       </div>
 
-  </div>
+
+
+    </div>
+
 
 </div>
-

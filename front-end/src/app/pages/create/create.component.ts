@@ -51,9 +51,9 @@ export class CreateComponent implements OnInit {
 
   }
 
-  deleteWarehouse (id:number){
+  async deleteWarehouse (id:number){
     console.log("start deleting");
-      this.service.deleteWarehouse(id).subscribe(data =>{
+      await this.service.deleteWarehouse(id).subscribe(data =>{
       try {
         console.log("dddelete"+data);
 
@@ -65,7 +65,7 @@ export class CreateComponent implements OnInit {
           console.error('Here is the error message', error);
       }
      });
-     this.getWarehouse();
+     await this.getWarehouse();
      console.log("end deleting");
 
   }
@@ -81,12 +81,13 @@ export class CreateComponent implements OnInit {
 
     this.service.addZone(WareHouseId).subscribe( data =>{
       let info=data;
-      //let zoneArray = this.warehouses[i].zone;
-      this.warehouses=[];
+      this.warehouses[index].zone=[];
+      let zoneArray = this.warehouses[index].zone;
+
 
       for(let ware in data) {
         console.log(" :"+ware);
-        this.warehouses.push(data[ware]);
+        zoneArray.push(data[ware]);
 
       }
 
@@ -115,7 +116,17 @@ export class CreateComponent implements OnInit {
 
   }
 
+  async deleteZone(warehouseIndex:number,zoneIndex:number){
+    let warehouseId=this.warehouses[warehouseIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zone[zoneIndex].id;
+    let finish=await this.service.deleteZone(warehouseId,zoneId).subscribe( data=>{
+      let finish=data;
+    });
 
+    let done= await this.getZone(warehouseId,warehouseIndex);
+
+
+  }
   toggleZone(indexWarehouse:number,indexZone:number){
     this.warehouses[indexWarehouse].zone[indexZone].visible=!this.warehouses[indexWarehouse].zone[indexZone].visible;
 

@@ -57,9 +57,12 @@ export default async function handler(
         )
         
 
-        
-        res.status(200).json({ name: 'John Doe' })
-       
+        try{
+        return res.status(200).json({ name: 'John Doe' })
+        }
+        catch(error){
+            console.error("error message:"+error);
+        }
         //const result = await prisma.$queryRaw`Update remove =false FROM warehouse where id=1`
 
     break;
