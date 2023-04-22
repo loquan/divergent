@@ -21,7 +21,7 @@
  </mat-toolbar-row>
 </mat-toolbar>
 <mat-sidenav-container>
-<mat-sidenav #sidenav opened="true" >
+<mat-sidenav #sidenav opened="true" style="height:150px;">
   <mat-list role="list">
     <mat-list-item role="listitem" *ngFor="let menu of menuList;let i=index" [ngClass]="menu.active" routerLink="/{{menu.routePath}}" (click)="setActive(i);sidenav.toggle()">
       <mat-icon>{{menu.icon}}</mat-icon>
@@ -31,8 +31,8 @@
   </mat-list>
 
  </mat-sidenav>
- <mat-sidenav-content >
-  <div style="height:150px;margin-left:200px;"> <router-outlet></router-outlet></div>
+ <mat-sidenav-content style="height:900px;margin-left:800px;">
+  <div ><router-outlet></router-outlet> </div>
 </mat-sidenav-content>
 </mat-sidenav-container>
 

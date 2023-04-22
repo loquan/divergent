@@ -5,3 +5,10 @@
   <button mat-button (click)="addWarehouse()" color="primary">Add New</button>
   <button mat-button (click)="getWarehouse()" color="primary">Get Data</button>
 </div>
+
+
+<div  *ngFor="let warehouse of warehouses;let i=index">
+   <button>warehouse:{{warehouse.id}}</button> <button (click)="deleteWarehouse(warehouse.id)" >delete warehouse:{{warehouse.id}}</button>
+
+</div>
+

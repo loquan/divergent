@@ -1,7 +1,8 @@
 import { Component ,OnInit} from '@angular/core';
 import { WarehouseDataService } from '../../warehouse-data.service';
+import { WarehouseObject} from "../../models/warehouse"
 import { HttpClient  } from '@angular/common/http';
-
+import { ChangeDetectorRef }  from '@angular/core'
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -9,7 +10,7 @@ import { HttpClient  } from '@angular/common/http';
 })
 export class CreateComponent implements OnInit {
 
-  warehouse:any;
+  warehouses:WarehouseObject[]=[{id:1,visible:false},{id:2,visible:false}];
   constructor(private service:WarehouseDataService,private http:HttpClient){
 
   }
@@ -17,38 +18,49 @@ export class CreateComponent implements OnInit {
 
   ngOnInit(){
     console.log("init");
-    //this.getWarehouse();
+
   }
   addWarehouse(){
       this.service.addWarehouse().subscribe( data =>{
         let info=data;
-        this.warehouse=info;
+        this.warehouses=info;
+
       })
   }
 
+  deleteWarehouse (id:number){
+    console.log("start deleting");
+      this.service.deleteWarehouse(id).subscribe(data =>{
+      try {
+        console.log("dddelete"+data);
+        let temp=data;
+        //this.getWarehouse();
+
+      }
+      catch (error) {
+          console.error('Here is the error message', error);
+      }
+     });
+     this.getWarehouse();
+     console.log("end deleting");
+
+  }
   getWarehouse(){
 
       this.service.getWarehouse().subscribe(data =>{
         try {
-             this.warehouse=data;
+              this.warehouses=[];
+              for(let ware in data) {
+                console.log(" :"+ware);
+                this.warehouses.push(data[ware]);
+
+              }
         }
         catch (error) {
             console.error('Here is the error message', error);
         }
 
-      });
-      // console.log("start");
-      //  this.http.get<any>('http://localhost:3000/api/warehouse').subscribe( data =>{
-      //    try { this.warehouse=data;
-      //          console.log("found");
-      //    }
-      //    catch (error) {
-      //     console.error('Here is the error message', error);
-      //    }
-      //  });
-    // this.service.getWarehouse().subscribe( data =>{
-    //   let info=data;
-    //   return info;
-    // })
+       });
+
   }
 }

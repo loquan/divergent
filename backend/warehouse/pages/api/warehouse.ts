@@ -21,6 +21,9 @@ export default async function handler(
 
   // need this be set because the sever and client are running on the same machine
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  let valueString=req.method;
+  console.log(valueString);
+  console.log("status");
   switch (req.method)
   { 
     case 'POST':
@@ -44,19 +47,25 @@ export default async function handler(
         
        
         let json = Object.assign({}, warehouses);
-        
         return res.status(200).json(json);
         
         //res.status(200);
     break;    
-    case 'DELETE':
+    case 'OPTIONS':
+        console.log("delete");
+        let idValue:number = parseInt( req.query.id);
         const result2 = await prisma.warehouse.update({
             where:{
-                id:1
+                id:idValue
             },
              data:{remove:true}
             }
         )
+        
+
+        
+        res.status(200).json({ name: 'finish' })
+       
         //const result = await prisma.$queryRaw`Update remove =false FROM warehouse where id=1`
 
     break;

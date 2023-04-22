@@ -21,10 +21,15 @@ export default async function handler(
   let lengthResult= result.length;
   await prisma.shelve.create({data:{shelveName:newName,zoneId:1}});
   let createData = await prisma.shelve.create({data:{shelveName:"test",zoneId:1}});
+  let warehouses : any ;
   switch (req.method)
   { 
     case 'POST':
-        //let createData = await prisma.shelve.create({data:{}});
+        
+        let createData = await prisma.warehouse.create({data:{}});
+        warehouses =  await prisma.warehouse.findMany({where: {remove: false
+        }});
+        res.status(200).json(warehouses);
     break;  
     case 'GET':
          
@@ -42,6 +47,11 @@ export default async function handler(
              data:{remove:true}
             }
         )
+
+        shevles =  await prisma.shelve.findMany({where: {remove: false
+        }}); 
+      //console.log("data",werehouses)
+      res.status(200).json(shevles);
         //const result = await prisma.$queryRaw`Update remove =false FROM warehouse where id=1`
 
     break;
