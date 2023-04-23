@@ -1,13 +1,13 @@
 <h3>ADD SHEVLES</h3>
 <div class="example-button-row">
   <button class="light-button" mat-raised-button (click)="addWarehouse()" >Add New Warehouse</button>
-  <button mat-raised-button mat-button (click)="getWarehouse()" >Get Data</button>
+
 </div>
 
 
 <div *ngFor="let warehouse of warehouses;let i=index">
   <div class="example-button-row">
-    <button mat-raised-button (click)="toggleWarehouse(i)">show zones for warehouse:{{warehouse.id}}</button>
+    <button mat-raised-button (click)="toggleWarehouse(i)">Show zones for warehouse:{{warehouse.id}}</button>
     <button mat-raised-button color="warn" (click)="deleteWarehousePost(warehouse.id)" >Delete warehouse:{{warehouse.id}}</button>
 
    </div>
@@ -20,7 +20,10 @@
           <div *ngFor="let zone of warehouses[i].zones;let k=index">
 
                 <div class="container-row-left">
-                    <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{k}}</button>
+
+
+
+                    <button mat-raised-button (click)="toggleZone(i,k);getShelves(i,k)">Show Shelve for Zone:{{k}}  </button>
                     <!-- <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button> -->
 
                 </div>
@@ -34,7 +37,8 @@
                           </mat-form-field>
 
                             <button style="margin-bottom:30px;" mat-raised-button (click)="addShelves(i,k)">Add Shelve:</button>
-                            <button style="margin-bottom:30px"mat-raised-button (click)="saveAllShelve(i,k)">save All Shelve:</button>
+                            <button style="margin-bottom:30px"mat-raised-button (click)="saveAllShelve(i,k)">Save All Shelve:</button>
+                            <button style="margin-bottom:30px"mat-raised-button (click)="deleteAllShelvesPost(i,k)">Delete All Shelve:</button>
 
                      </div>
 
@@ -47,8 +51,8 @@
                             <mat-label >Shelve Name</mat-label>
                             <input  matInput type="text" placeholder="shelve"  [(ngModel)]="warehouses[i].zones[k].shelves[x].shelveName">
                           </mat-form-field>
-                            <button style="margin-bottom:30px;" mat-raised-button (click)="saveShelve(i,k,x)">Save Shelf:</button>
-                            <button style="margin-bottom:30px;" mat-raised-button (click)="deleteShelvePost(i,k,x)" color="warn">Delete Shelf:</button>
+                            <button style="margin-bottom:30px;" mat-raised-button (click)="saveShelve(i,k,x)">Save Shelve:</button>
+                            <button style="margin-bottom:30px;" mat-raised-button (click)="deleteShelvePost(i,k,x)" color="warn">Delete Shelve:</button>
 
                         </div>
                       </div>

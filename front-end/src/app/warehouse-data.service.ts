@@ -60,12 +60,45 @@ export class WarehouseDataService {
 
     deleteZonePost(WarehouseId:number,idNumber:number):Observable<any>{
       const params = new HttpParams()
-      .set('ZonedId', idNumber)
+      .set('zonedId', idNumber)
       .set('command', "DELETE");
 
       return this.http.post<any[]>('http://localhost:3000/api/zone',  params );
      }
 
+     getShelves(ZoneId:number):Observable<any>{
+      const params = new HttpParams()
+      .set('zoneId', ZoneId);
+
+       return this.http.get<any[]>('http://localhost:3000/api/shelve',{params});
+      }
+
+     checkIfShelveNameExist(name:string):Observable<any>{
+      const params = new HttpParams()
+      .set('shelveName',name )
+      .set('command', "exist");
+
+      return this.http.post<any[]>('http://localhost:3000/api/shelve',  params );
+
+     }
+
+
+     saveShelveNameNew(zoneId:number,names:string[]):Observable<any>{
+      const params = new HttpParams()
+      .set('zoneId',zoneId)
+      .set('shelveName',JSON.stringify(names))
+      .set('command', "new");
+      return this.http.post<any[]>('http://localhost:3000/api/shelve',  params )
+     }
+
+     updateShelveNameNewExist(name:string):Observable<any>{
+      const params = new HttpParams()
+      .set('shelveName',name )
+      .set('command', "exist");
+
+      return this.http.post<any[]>('http://localhost:3000/api/shelve',  params );
+
+     }
 
 
 }

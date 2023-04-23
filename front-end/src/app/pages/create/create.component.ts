@@ -13,7 +13,7 @@ import { ChangeDetectorRef }  from '@angular/core'
 export class CreateComponent implements OnInit {
 
   warehouses:WarehouseObject[]=[];
-  constructor(private service:WarehouseDataService,private http:HttpClient){
+  constructor(private service:WarehouseDataService,private http:HttpClient,private refresh:ChangeDetectorRef){
 
   }
 
@@ -208,35 +208,90 @@ export class CreateComponent implements OnInit {
 
   }
 
+  checkIfShelveNameExistForNew(name:string){
+
+  }
+
+  checkIfShelveNameExistForExisting(name:string){
+
+  }
   saveAllShelve(warehouseIndex:number,zoneIndex:number){
+
+    this.saveNewShelve(warehouseIndex,zoneIndex);
+
+  }
+
+  async saveNewShelve(warehouseIndex:number,zoneIndex:number){
+
+    let names:string[]=[];
+    let wareHouseId=this.warehouses[warehouseIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
+    let shelves=this.warehouses[warehouseIndex].zones[zoneIndex].shelves;
+
+    shelves.map( (data) =>{
+        if(data.id<0 && data.shelveName!=null && data.shelveName.length>0)//intialize -1
+        {
+           names.push(data.shelveName);
+        }
+
+    })
+
+
+    if(names.length)
+      await this.service.saveShelveNameNew(zoneId,names).subscribe( data =>{
+
+        let addCount=0;
+        for(let i=0;i<shelves.length;i++)
+        {
+            if(shelves[i].id==-1)
+            {
+              shelves[i]=data[addCount++];
+
+            }
+        }
+
+      });
+
+  }
+
+  updateAllShelve(warehouseIndex:number,zoneIndex:number){
+
 
   }
 
   saveShelve(warehouseIndex:number,zoneIndex:number,shelveId:number){
 
   }
-  getShelve(WareHouseId:number,index:number){
+  getShelves(WareHouseIndex:number,ZoneIndex:number){
 
-      this.service.getZone(WareHouseId).subscribe(data =>{
-      try {
-            let zones:ZoneObject[]=[];
-            for(let ware in data) {
+      let ZoneId=this.warehouses[WareHouseIndex].zones[ZoneIndex].id;
+      this.service.getShelves(ZoneId).subscribe(data =>{
+          try {
+                let result=data;
+                let newShelve:ShelveObject[]=[];
 
-              zones.push(data[ware]);
-            }
-            this.warehouses[index].zones=zones;
-      }
-      catch (error) {
-          console.error('Here is the error message', error);
-      }
+                this.warehouses[WareHouseIndex].zones[ZoneIndex].shelves=newShelve;
+
+                for(let i in data)
+                {
+
+                  this.warehouses[WareHouseIndex].zones[ZoneIndex].shelves.push(data[i]);
+
+                }
+
+                this.refresh.detectChanges()
+          }
+          catch (error) {
+              console.error('Here is the error message', error);
+          }
 
      });
 
   }
 
+  deleteAllShelvesPost(warehouseIndex:number,zoneIndex:number){
 
-
-
+  }
    deleteShelvePost(warehouseIndex:number,zoneIndex:number,shelveIndex:number){
     let warehouseId=this.warehouses[warehouseIndex].id;
     let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
