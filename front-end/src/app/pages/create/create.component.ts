@@ -91,7 +91,7 @@ export class CreateComponent implements OnInit {
     this.warehouses[index].visible=!this.warehouses[index].visible;
     if(this.warehouses[index].visible==true)
     {
-      if(this.warehouses[index].zone==null)
+      if(this.warehouses[index].zones==null)
       {
           this.getZone(this.warehouses[index].id,index);
       }
@@ -105,8 +105,8 @@ export class CreateComponent implements OnInit {
 
     this.service.addZone(WareHouseId).subscribe( data =>{
       let info=data;
-      this.warehouses[index].zone=[];
-      let zoneArray = this.warehouses[index].zone;
+      this.warehouses[index].zones=[];
+      let zoneArray = this.warehouses[index].zones;
 
 
       for(let ware in data) {
@@ -125,12 +125,12 @@ export class CreateComponent implements OnInit {
 
       this.service.getZone(WareHouseId).subscribe(data =>{
       try {
-            let zone:ZoneObject[]=[];
+            let zones:ZoneObject[]=[];
             for(let ware in data) {
               console.log(" :"+ware);
-              zone.push(data[ware]);
+              zones.push(data[ware]);
             }
-            this.warehouses[index].zone=zone;
+            this.warehouses[index].zones=zones;
       }
       catch (error) {
           console.error('Here is the error message', error);
@@ -142,7 +142,7 @@ export class CreateComponent implements OnInit {
 
   async deleteZone(warehouseIndex:number,zoneIndex:number){
     let warehouseId=this.warehouses[warehouseIndex].id;
-    let zoneId=this.warehouses[warehouseIndex].zone[zoneIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
     let finish=await this.service.deleteZone(warehouseId,zoneId).subscribe( data=>{
       let finish=data;
     });
@@ -154,7 +154,7 @@ export class CreateComponent implements OnInit {
 
    deleteZonePost(warehouseIndex:number,zoneIndex:number){
     let warehouseId=this.warehouses[warehouseIndex].id;
-    let zoneId=this.warehouses[warehouseIndex].zone[zoneIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
     this.service.deleteZonePost(warehouseId,zoneId).subscribe( data=>{
       let finish=data;
       this.getZone(warehouseId,warehouseIndex);
@@ -165,7 +165,82 @@ export class CreateComponent implements OnInit {
 
   }
   toggleZone(indexWarehouse:number,indexZone:number){
-    this.warehouses[indexWarehouse].zone[indexZone].visible=!this.warehouses[indexWarehouse].zone[indexZone].visible;
+    this.warehouses[indexWarehouse].zones[indexZone].visible=!this.warehouses[indexWarehouse].zones[indexZone].visible;
 
   }
+
+  addShelves(warehouseIndex:number,zoneIndex:number)
+  {
+
+    let maxShelves=10;
+
+    let currentSize=0;
+    let newShelves= this.warehouses[warehouseIndex].zones[zoneIndex].shelvesAdd;
+    let maxAdd=maxShelves-currentSize;
+
+    if(this.warehouses[warehouseIndex].zones[zoneIndex].shelves==null)
+        this.warehouses[warehouseIndex].zones[zoneIndex].shelves=[]
+    else
+      currentSize=this.warehouses[warehouseIndex].zones[zoneIndex].shelves.length;
+
+    if(newShelves>maxAdd)
+    {
+      newShelves=maxAdd;
+      this.warehouses[warehouseIndex].zones[zoneIndex].shelvesAdd=maxAdd;
+    }
+    for(let i=0;i<newShelves;i++)
+    {
+      let shelve:ShelveObject={ id:-1,
+        shelveName:"",
+        zoneId:this.warehouses[warehouseIndex].zones[zoneIndex].id,
+        remove:false
+       };
+       this.warehouses[warehouseIndex].zones[zoneIndex].shelves.push(shelve);
+
+    }
+
+  }
+
+  saveAllShelve(warehouseIndex:number,zoneIndex:number){
+
+  }
+
+  saveShelve(warehouseIndex:number,zoneIndex:number,shelveId:number){
+
+  }
+  getShelve(WareHouseId:number,index:number){
+
+      this.service.getZone(WareHouseId).subscribe(data =>{
+      try {
+            let zones:ZoneObject[]=[];
+            for(let ware in data) {
+
+              zones.push(data[ware]);
+            }
+            this.warehouses[index].zones=zones;
+      }
+      catch (error) {
+          console.error('Here is the error message', error);
+      }
+
+     });
+
+  }
+
+
+
+
+   deleteShelvePost(warehouseIndex:number,zoneIndex:number){
+    let warehouseId=this.warehouses[warehouseIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
+    this.service.deleteZonePost(warehouseId,zoneId).subscribe( data=>{
+      let finish=data;
+      this.getZone(warehouseId,warehouseIndex);
+    });
+
+
+
+
+  }
+
 }

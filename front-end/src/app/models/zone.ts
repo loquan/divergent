@@ -9,5 +9,6 @@ export interface ZoneObject {
   warehouseId:number;
   visible:boolean;
   remove:boolean;
-  shevleArray:ShelveObject[];
+  shelves:ShelveObject[];
+  shelvesAdd:number;
 }

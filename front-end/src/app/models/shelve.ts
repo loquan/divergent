@@ -2,9 +2,8 @@
 
 export interface ShelveObject {
   id:number;
-  name:string;
+  shelveName:string;
   zoneId:number;
-  visible:boolean;
   remove:boolean;
 
 }

@@ -17,14 +17,50 @@
         <button mat-raised-button (click)="addZone(warehouses[i].id,i)">Add Zone:</button>
         <button mat-raised-button (click)="getZone(warehouses[i].id,i)">Get Zone:</button>
         <table>
-          <tr *ngFor="let zone of warehouses[i].zone;let k=index">
+          <tr *ngFor="let zone of warehouses[i].zones;let k=index">
             <td>
-              <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button>
-            </td>
+              <table>
+                <tr>
+                  <td>
+                    <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button>
+                  </td>
+                  <td>
+                    <button mat-raised-button  color="warn" (click)="deleteZonePost(i,k)">delete zone:{{zone.id}}</button>
+                  </td>
+                </tr>
+                <tr *ngIf="warehouses[i].zones[k].visible">
+
+                  <td>
+                    <table>
+                      <tr>
+                        <td>
+
+
+
+                            <input  type="number" placeholder="1" max="10" [(ngModel)]="warehouses[i].zones[k].shelvesAdd">
+                            <button mat-raised-button (click)="addShelves(i,k)">Add Shelve:</button>
+
+                        </td>
+                        <td><button mat-raised-button (click)="getShelve(i,k)">Get Shelve:</button></td>
+                        <td><button mat-raised-button (click)="saveAllShelve(i,k)">save All Shelve:</button></td>
+                      </tr>
+
+                      <tr  *ngFor="let shelve of warehouses[i].zones[k].shelves;let x=index ">
+
+                        <label>Shelve Name </label>
+                        <input matInput type="text" placeholder="shelve"  [(ngModel)]="warehouses[i].zones[k].shelves[x].shelveName">
+                        <button mat-raised-button (click)="saveShelve(i,k,x)">Save Shelf:</button>
+
+                       </tr>
+                    </table>
+                </td>
+
+                </tr>
+
+              </table>
             <td>
-              <button mat-raised-button  color="warn" (click)="deleteZonePost(i,k)">delete zone:{{zone.id}}</button>
-            </td>
           </tr>
+
           </table>
 
       </div>
