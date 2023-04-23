@@ -1,4 +1,4 @@
-<p>create works!</p>
+<h3>ADD SHEVLES</h3>
 <div class="example-button-row">
   <button class="light-button" mat-raised-button (click)="addWarehouse()" >Add New Warehouse</button>
   <button mat-raised-button mat-button (click)="getWarehouse()" >Get Data</button>
@@ -8,65 +8,54 @@
 <div *ngFor="let warehouse of warehouses;let i=index">
   <div class="example-button-row">
     <button mat-raised-button (click)="toggleWarehouse(i)">show zones for warehouse:{{warehouse.id}}</button>
-    <button mat-raised-button color="warn" (click)="deleteWarehousePost(warehouse.id)" >delete warehouse:{{warehouse.id}}</button>
+    <button mat-raised-button color="warn" (click)="deleteWarehousePost(warehouse.id)" >Delete warehouse:{{warehouse.id}}</button>
 
-   </div><br>
+   </div>
     <div *ngIf="warehouses[i].visible" style="margin-left:20px;border-color:black;"  >
 
       <div class="example-button-row" >
-        <button mat-raised-button (click)="addZone(warehouses[i].id,i)">Add Zone:</button>
-        <button mat-raised-button (click)="getZone(warehouses[i].id,i)">Get Zone:</button>
-        <table>
-          <tr *ngFor="let zone of warehouses[i].zones;let k=index">
-            <td>
-              <table>
-                <tr>
-                  <td>
-                    <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button>
-                  </td>
-                  <td>
-                    <button mat-raised-button  color="warn" (click)="deleteZonePost(i,k)">delete zone:{{zone.id}}</button>
-                  </td>
-                </tr>
-                <tr *ngIf="warehouses[i].zones[k].visible">
+        <!-- <button mat-raised-button (click)="addZone(warehouses[i].id,i)">Add Zone:</button>
+        <button mat-raised-button (click)="getZone(warehouses[i].id,i)">Get Zone:</button> -->
 
-                  <td>
-                    <table>
-                      <tr>
-                        <td>
+          <div *ngFor="let zone of warehouses[i].zones;let k=index">
+
+                <div class="container-row-left">
+                    <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{k}}</button>
+                    <!-- <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button> -->
+
+                </div>
 
 
+                <div *ngIf="warehouses[i].zones[k].visible" >
+                     <div class="container-row-left" style="margin-left:20px">
+                         <mat-form-field appearance="fill" >
+                            <mat-label >Row to be Added</mat-label>
+                            <input  matInput type="number" placeholder="1" max="10" [(ngModel)]="warehouses[i].zones[k].shelvesAdd" >
+                          </mat-form-field>
 
-                            <input  type="number" placeholder="1" max="10" [(ngModel)]="warehouses[i].zones[k].shelvesAdd">
-                            <button mat-raised-button (click)="addShelves(i,k)">Add Shelve:</button>
+                            <button style="margin-bottom:30px;" mat-raised-button (click)="addShelves(i,k)">Add Shelve:</button>
+                            <button style="margin-bottom:30px"mat-raised-button (click)="saveAllShelve(i,k)">save All Shelve:</button>
 
-                        </td>
-                        <td><button mat-raised-button (click)="getShelve(i,k)">Get Shelve:</button></td>
-                        <td><button mat-raised-button (click)="saveAllShelve(i,k)">save All Shelve:</button></td>
-                      </tr>
+                     </div>
 
-                      <tr  *ngFor="let shelve of warehouses[i].zones[k].shelves;let x=index ">
 
-                        <label>Shelve Name </label>
-                        <input matInput type="text" placeholder="shelve"  [(ngModel)]="warehouses[i].zones[k].shelves[x].shelveName">
-                        <button mat-raised-button (click)="saveShelve(i,k,x)">Save Shelf:</button>
+                      <div *ngFor="let shelve of warehouses[i].zones[k].shelves;let x=index " >
 
-                       </tr>
-                    </table>
-                </td>
+                        <div class="container-row-center" style="margin-left:40px">
 
-                </tr>
+                          <mat-form-field appearance="fill" >
+                            <mat-label >Shelve Name</mat-label>
+                            <input  matInput type="text" placeholder="shelve"  [(ngModel)]="warehouses[i].zones[k].shelves[x].shelveName">
+                          </mat-form-field>
+                            <button style="margin-bottom:30px;" mat-raised-button (click)="saveShelve(i,k,x)">Save Shelf:</button>
+                            <button style="margin-bottom:30px;" mat-raised-button (click)="deleteShelvePost(i,k,x)" color="warn">Delete Shelf:</button>
 
-              </table>
-            <td>
-          </tr>
+                        </div>
+                      </div>
 
-          </table>
-
+                  </div>
+            </div>
       </div>
-
-
-
     </div>
 
 

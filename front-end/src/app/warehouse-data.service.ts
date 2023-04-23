@@ -33,10 +33,11 @@ export class WarehouseDataService {
     return this.http.post<any[]>('http://localhost:3000/api/warehouse',params );
    }
 
-   addZone(WarehouseId:number){
+   addZone(WarehouseId:number,total:number){
 
     const params = new HttpParams()
-    .set('warehouseId', WarehouseId);
+    .set('warehouseId', WarehouseId)
+    .set('total', total);
 
     return this.http.post<any[]>('http://localhost:3000/api/zone',params);
    }

@@ -17,15 +17,22 @@ export class CreateComponent implements OnInit {
 
   }
 
-
+  totalZone:number=10;
   ngOnInit(){
     console.log("init");
     this.getWarehouse();
   }
   addWarehouse(){
-      this.service.addWarehouse().subscribe( data =>{
-        let info=data;
-        this.warehouses=info;
+
+        this.service.addWarehouse().subscribe( data =>{
+
+
+          let info=data;
+          this.warehouses=info;
+          let lastIndex=this.warehouses.length-1;
+          let newId=this.warehouses[lastIndex].id;
+
+          this.addZone(newId,lastIndex,this.totalZone);
 
       })
   }
@@ -100,20 +107,20 @@ export class CreateComponent implements OnInit {
 
   }
 
-  addZone(WareHouseId:number,index:number)
+  addZone(WareHouseId:number,index:number,amount:number)
   {
 
-    this.service.addZone(WareHouseId).subscribe( data =>{
+    this.service.addZone(WareHouseId,amount).subscribe( data =>{
       let info=data;
-      this.warehouses[index].zones=[];
-      let zoneArray = this.warehouses[index].zones;
+      this.warehouses[index].zones=data;
+      // let zoneArray = this.warehouses[index].zones;
 
 
-      for(let ware in data) {
-        console.log(" :"+ware);
-        zoneArray.push(data[ware]);
+      // for(let ware in data) {
+      //   console.log(" :"+ware);
+      //   zoneArray.push(data[ware]);
 
-      }
+      // }
 
 
 
@@ -230,7 +237,7 @@ export class CreateComponent implements OnInit {
 
 
 
-   deleteShelvePost(warehouseIndex:number,zoneIndex:number){
+   deleteShelvePost(warehouseIndex:number,zoneIndex:number,shelveIndex:number){
     let warehouseId=this.warehouses[warehouseIndex].id;
     let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
     this.service.deleteZonePost(warehouseId,zoneId).subscribe( data=>{
