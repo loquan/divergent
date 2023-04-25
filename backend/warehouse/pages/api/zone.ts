@@ -31,15 +31,21 @@ export default async function handler(
 
   let WerehouseId:number;
   
-  if(req.body.warehouseId!=null)
+  if(req.body.warehouseId!=null)//sent via post
     WerehouseId=  parseInt( req.body.warehouseId);
-  else 
+  else //sent via get 
     WerehouseId=  parseInt( req.query.warehouseId);
 
   switch (req.method)
   { 
-    case 'POST':        
-        let createData = await prisma.zone.create({data:{warehouseId:WerehouseId}})
+    case 'POST':     
+           
+        let total=req.body.total;
+        for(let i=0;i<total;i++)
+        {
+          await prisma.zone.create({data:{warehouseId:WerehouseId}})
+        }
+           
         
         zones =  await prisma.zone.findMany({where: {warehouseId:WerehouseId,remove: false
         }});

@@ -18,7 +18,7 @@
     <button mat-icon-button (click)="sidenav.toggle()" >
       <mat-icon >menu</mat-icon>
     </button>
-    <h1>Nav Bar</h1>
+    <h1 style="margin-top:15px;">{{ DisplayTitle}}</h1>
  </mat-toolbar-row>
 </mat-toolbar>
 <mat-sidenav-container>
@@ -32,7 +32,7 @@
   </mat-list>
 
  </mat-sidenav>
- <mat-sidenav-content style="margin-left:100px">
+ <mat-sidenav-content style="margin-left:100px;height:900px">
   <div  class="w3-container">
     <router-outlet></router-outlet>
   </div>

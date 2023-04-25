@@ -1,4 +1,4 @@
-<h3>ADD SHEVLES</h3>
+
 <div class="example-button-row">
   <button class="light-button" mat-raised-button (click)="addWarehouse()" >Add New Warehouse</button>
 
@@ -7,7 +7,9 @@
 
 <div *ngFor="let warehouse of warehouses;let i=index">
   <div class="example-button-row">
-    <button mat-raised-button (click)="toggleWarehouse(i)">Show zones for warehouse:{{warehouse.id}}</button>
+
+
+     <button mat-raised-button (click)="toggleWarehouse(i)" [ngStyle]="{'background-color': !warehouses[i].visible ? '#999' : 'white'}">{{ !warehouses[i].visible ? 'SHOW' : 'HIDE'}} zones for warehouse:{{warehouse.id}}</button>
     <button mat-raised-button color="warn" (click)="deleteWarehousePost(warehouse.id)" >Delete warehouse:{{warehouse.id}}</button>
 
    </div>
@@ -19,19 +21,19 @@
 
           <div *ngFor="let zone of warehouses[i].zones;let k=index">
 
-                <div class="container-row-left">
+                <div class="container-row-left" style="background-color: #aaa;width:1000px" >
 
 
 
-                    <button mat-raised-button (click)="toggleZone(i,k);getShelves(i,k)">Show Shelve for Zone:{{k}}  </button>
+                    <button mat-raised-button (click)="toggleZone(i,k);getShelves(i,k)" [ngStyle]="{'background-color': !warehouses[i].zones[k].visible ? '#999' : 'white'}">{{ !warehouses[i].zones[k].visible ? 'SHOW' : 'HIDE'}} Shelve for Zone:{{k}}  </button>
                     <!-- <button mat-raised-button (click)="toggleZone(i,k)">show zones for warehouse:{{zone.id}}</button> -->
 
                 </div>
 
 
-                <div *ngIf="warehouses[i].zones[k].visible" >
-                     <div class="container-row-left" style="margin-left:20px">
-                         <mat-form-field appearance="fill" >
+                <div *ngIf="warehouses[i].zones[k].visible" style="width:1000px;background-color:#ddd">
+                     <div class="container-row-left" style="margin-left:20px;">
+                         <mat-form-field appearance="fill" style="margin-top:20px;">
                             <mat-label >Row to be Added</mat-label>
                             <input  matInput type="number" placeholder="1" max="10" [(ngModel)]="warehouses[i].zones[k].shelvesAdd" >
                           </mat-form-field>
@@ -45,7 +47,7 @@
 
                       <div *ngFor="let shelve of warehouses[i].zones[k].shelves;let x=index " >
 
-                        <div class="container-row-center" style="margin-left:40px">
+                        <div class="container-row-center" style="margin-left:40px;;">
 
                           <mat-form-field appearance="fill" >
                             <mat-label >Shelve Name</mat-label>

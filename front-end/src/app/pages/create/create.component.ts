@@ -5,6 +5,8 @@ import { ZoneObject} from "../../models/zone"
 import { ShelveObject} from "../../models/shelve"
 import { HttpClient  } from '@angular/common/http';
 import { ChangeDetectorRef }  from '@angular/core'
+import { MatDialog} from '@angular/material/dialog';
+import { PopupErrorComponent } from 'src/app/popup-error/popup-error.component';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -13,7 +15,7 @@ import { ChangeDetectorRef }  from '@angular/core'
 export class CreateComponent implements OnInit {
 
   warehouses:WarehouseObject[]=[];
-  constructor(private service:WarehouseDataService,private http:HttpClient,private refresh:ChangeDetectorRef){
+  constructor(private service:WarehouseDataService,private http:HttpClient,private refresh:ChangeDetectorRef,private dialog:MatDialog){
 
   }
 
@@ -178,10 +180,13 @@ export class CreateComponent implements OnInit {
 
   addShelves(warehouseIndex:number,zoneIndex:number)
   {
+    if(this.warehouses[warehouseIndex].zones[zoneIndex].shelvesAdd==null)
+      this.warehouses[warehouseIndex].zones[zoneIndex].shelvesAdd=1;
 
     let maxShelves=10;
 
     let currentSize=0;
+
     let newShelves= this.warehouses[warehouseIndex].zones[zoneIndex].shelvesAdd;
     let maxAdd=maxShelves-currentSize;
 
@@ -208,20 +213,121 @@ export class CreateComponent implements OnInit {
 
   }
 
-  checkIfShelveNameExistForNew(name:string){
+  checkIfShelveNameExistForNew(name:string[]){
+
+
 
   }
 
   checkIfShelveNameExistForExisting(name:string){
 
   }
-  saveAllShelve(warehouseIndex:number,zoneIndex:number){
+  async saveAllShelve(warehouseIndex:number,zoneIndex:number){
+    if(this.checkIfGroupAreSame(warehouseIndex,zoneIndex))
+    {
+        await this.updateShelves(warehouseIndex,zoneIndex);
+        await this.saveNewShelve(warehouseIndex,zoneIndex);
 
-    this.saveNewShelve(warehouseIndex,zoneIndex);
+    }
 
   }
 
-  async saveNewShelve(warehouseIndex:number,zoneIndex:number){
+  async saveShelve(warehouseIndex:number,zoneIndex:number,shelveIndex:number){
+
+
+    let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
+    let shelves=this.warehouses[warehouseIndex].zones[zoneIndex].shelves;
+    let shelveId=this.warehouses[warehouseIndex].zones[zoneIndex].shelves[shelveIndex].id;
+    let name:string=this.warehouses[warehouseIndex].zones[zoneIndex].shelves[shelveIndex].shelveName;
+    let names:string[]=[];
+    let ids:number[]=[]
+
+    names[0]=name;
+    ids[0]=shelveId
+    if(shelveId<=0)//new id
+    {
+     this.saveShelvesCheck(names,shelves,zoneId);
+    }
+    else
+    {
+      await this.service.updateShelves(zoneId,names,ids).subscribe( data =>{})
+
+    }
+
+  }
+
+
+   checkIfGroupAreSame(warehouseIndex:number,zoneIndex:number) {
+
+
+    let shelves=this.warehouses[warehouseIndex].zones[zoneIndex].shelves;
+    let arrayStackNames:number[]=[]
+    for(let index in shelves){
+
+      let name:any=shelves[index].shelveName;
+      if(arrayStackNames[name]==null)
+        arrayStackNames[name]=1;
+      else{
+        arrayStackNames[name]++;
+        let alertString: string = "You are trying to save --"+name+"---shelve name more han once"
+        alert(alertString);
+        return false;
+      }
+
+
+    }
+    return true;
+
+   }
+   saveShelvesCheck(names:string[],shelves:ShelveObject[],zoneId:number){
+
+    // check if the you are saving the same group
+
+
+    // check on all new Items
+    this.service.checkIfShelveNameExist(names).subscribe( existingData=>
+      {
+          let result=existingData;
+          if(existingData[0]==null)
+          {
+              this.service.saveShelveNameNew(zoneId,names).subscribe( data =>{
+                    let addCount=0;
+                    for(let i=0;i<shelves.length;i++)
+                    {
+                        if(shelves[i].id==-1)
+                        {
+                          shelves[i]=data[addCount++];
+                        }
+                    }
+
+              });
+          }else{
+            //if name already exist show location
+            let alertString="";
+            for(let x=0;x<Object.keys(existingData).length;x++)
+            {
+              for(let i=0;i<existingData[x].length;i++)
+              {
+                alertString+="this already exist "+existingData[x][i].shelveName+"      ";
+
+              }
+            }
+
+            //alert popup dialog
+            this.dialog.open(PopupErrorComponent,{data:existingData});
+            this.dialog.afterAllClosed.subscribe(()=>{
+
+            })
+
+
+
+        }
+      });
+
+
+   }
+
+   async saveNewShelve(warehouseIndex:number,zoneIndex:number){
 
     let names:string[]=[];
     let wareHouseId=this.warehouses[warehouseIndex].id;
@@ -236,32 +342,67 @@ export class CreateComponent implements OnInit {
 
     })
 
+    this.saveShelvesCheck(names,shelves,zoneId);
 
-    if(names.length)
-      await this.service.saveShelveNameNew(zoneId,names).subscribe( data =>{
 
-        let addCount=0;
-        for(let i=0;i<shelves.length;i++)
+  }
+
+  async updateShelves(warehouseIndex:number,zoneIndex:number){
+    let names:string[]=[];
+    let ids:number[]=[];
+    let wareHouseId=this.warehouses[warehouseIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
+    let shelves=this.warehouses[warehouseIndex].zones[zoneIndex].shelves;
+    let flag=true;
+    shelves.map( (data) =>{
+        if(data.id>-1 )//intialize -1
         {
-            if(shelves[i].id==-1)
-            {
-              shelves[i]=data[addCount++];
-
-            }
+           names.push(data.shelveName);
+           ids.push(data.id);
         }
 
-      });
+    })
+
+
+    if(names.length)
+    {
+
+      //check if update existing name exist
+       await this.service.checkIfShelveNameUpdateExist(names,ids).subscribe( existingData =>{
+        if(existingData!=null )
+        {
+
+          this.dialog.open(PopupErrorComponent,{data:existingData});
+          this.dialog.afterAllClosed.subscribe(()=>{})
+          flag=false;
+          return false;
+        }
+
+         this.service.updateShelves(zoneId,names,ids).subscribe( data =>{
+
+           let addCount=0;
+           for(let i=0;i<shelves.length;i++)
+           {
+               if(shelves[i].id==-1)
+               {
+                 shelves[i]=data[addCount++];
+
+               }
+           }
+
+         });
+
+
+
+         return flag;
+    })
+
+
+    }
 
   }
 
-  updateAllShelve(warehouseIndex:number,zoneIndex:number){
 
-
-  }
-
-  saveShelve(warehouseIndex:number,zoneIndex:number,shelveId:number){
-
-  }
   getShelves(WareHouseIndex:number,ZoneIndex:number){
 
       let ZoneId=this.warehouses[WareHouseIndex].zones[ZoneIndex].id;
@@ -289,16 +430,50 @@ export class CreateComponent implements OnInit {
 
   }
 
-  deleteAllShelvesPost(warehouseIndex:number,zoneIndex:number){
+   deleteAllShelvesPost(warehouseIndex:number,zoneIndex:number){
 
-  }
-   deleteShelvePost(warehouseIndex:number,zoneIndex:number,shelveIndex:number){
     let warehouseId=this.warehouses[warehouseIndex].id;
     let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
-    this.service.deleteZonePost(warehouseId,zoneId).subscribe( data=>{
-      let finish=data;
-      this.getZone(warehouseId,warehouseIndex);
-    });
+    let ids:number[]=[];
+
+    for(let i=0;i<this.warehouses[warehouseIndex].zones[zoneIndex].shelves.length;i++)
+    {
+      let tempId=this.warehouses[warehouseIndex].zones[zoneIndex].shelves[i].id;
+      if(tempId>-1)
+        ids.push(this.warehouses[warehouseIndex].zones[zoneIndex].shelves[i].id);
+    }
+
+    this.warehouses[warehouseIndex].zones[zoneIndex].shelves=[];
+
+    if(ids.length>0)
+    {
+      this.service.deleteShelvePost(ids).subscribe( data=>{
+        let finish=data;
+      });
+    }
+
+
+
+   }
+   deleteShelvePost(warehouseIndex:number,zoneIndex:number,shelveIndex:number){
+
+
+    let warehouseId=this.warehouses[warehouseIndex].id;
+    let zoneId=this.warehouses[warehouseIndex].zones[zoneIndex].id;
+    let shelveId=this.warehouses[warehouseIndex].zones[zoneIndex].shelves[shelveIndex].id;
+    this.warehouses[warehouseIndex].zones[zoneIndex].shelves.splice(shelveIndex,1);
+
+    if(zoneId>-1)
+    {
+      let ids:number[]=[]
+      ids[0]=shelveId;
+      this.service.deleteShelvePost(ids).subscribe( data=>{
+        let finish=data;
+
+      });
+
+
+    }
 
 
 

@@ -16,6 +16,9 @@ import { MatIconModule} from '@angular/material/icon';
 import { MatToolbarModule} from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog'
+
+import { PopupErrorComponent } from './popup-error/popup-error.component';
 
 
 @NgModule({
@@ -23,7 +26,8 @@ import { MatListModule } from '@angular/material/list';
     AppComponent,
     CreateComponent,
     SearchComponent,
-    MenuComponent
+    MenuComponent,
+    PopupErrorComponent
   ],
   imports: [
 
@@ -40,6 +44,7 @@ import { MatListModule } from '@angular/material/list';
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
+    MatDialogModule
 
 
   ],

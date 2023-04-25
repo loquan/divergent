@@ -23,6 +23,8 @@ export class WarehouseDataService {
     .set('id', idNumber);
 
     return this.http.delete<any>('http://localhost:3000/api/warehouse', { params });
+
+
    }
 
    deleteWarehousePost(idNumber:number):Observable<any>{
@@ -73,32 +75,56 @@ export class WarehouseDataService {
        return this.http.get<any[]>('http://localhost:3000/api/shelve',{params});
       }
 
-     checkIfShelveNameExist(name:string):Observable<any>{
+     checkIfShelveNameExist(names:string[]):Observable<any>{
+
+      let tempString=JSON.stringify(names);
+
       const params = new HttpParams()
-      .set('shelveName',name )
+      .set('shelveName',JSON.stringify(names) )
       .set('command', "exist");
 
-      return this.http.post<any[]>('http://localhost:3000/api/shelve',  params );
+      return this.http.get<any[]>('http://localhost:3000/api/shelve',  {params} );
 
      }
 
+     checkIfShelveNameUpdateExist(names:string[],ids:number[]):Observable<any>{
+
+      let tempString=JSON.stringify(names);
+
+      const params = new HttpParams()
+      .set('shelveNames',JSON.stringify(names) )
+      .set('ids',JSON.stringify(ids) )
+      .set('command', "updateExist");
+
+      return this.http.get<any[]>('http://localhost:3000/api/shelve',  {params} );
+
+     }
 
      saveShelveNameNew(zoneId:number,names:string[]):Observable<any>{
       const params = new HttpParams()
       .set('zoneId',zoneId)
       .set('shelveName',JSON.stringify(names))
-      .set('command', "new");
+      .set('command', "NEW");
       return this.http.post<any[]>('http://localhost:3000/api/shelve',  params )
      }
 
-     updateShelveNameNewExist(name:string):Observable<any>{
+     updateShelves(zoneId:number,names:string[],ids:number[]):Observable<any>{
       const params = new HttpParams()
-      .set('shelveName',name )
-      .set('command', "exist");
+      .set('zoneId',zoneId)
+      .set('shelveName',JSON.stringify(names) )
+      .set('ids',JSON.stringify(ids) )
+      .set('command', "UPDATE");
 
       return this.http.post<any[]>('http://localhost:3000/api/shelve',  params );
 
      }
 
+     deleteShelvePost(shelveids:number[]):Observable<any>{
+      const params = new HttpParams()
+      .set('shelveIds', JSON.stringify(shelveids))
+      .set('command', "DELETE");
+
+      return this.http.post<any[]>('http://localhost:3000/api/shelve',  params );
+     }
 
 }

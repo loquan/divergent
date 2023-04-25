@@ -27,10 +27,70 @@ export default async function handler(
   switch (req.method)
   { 
     case 'POST':
-        let createData = await prisma.warehouse.create({data:{}});
-        warehouses =  await prisma.warehouse.findMany({where: {remove: false
+      if(req.body.command=="DELETE")
+        {
+          console.log("delete");
+        let idValue:number = parseInt( req.body.id);
+        const result2 = await prisma.warehouse.update({
+            where:{
+                id:idValue
+            },
+             data:{remove:true}
+            }
+        )
+        
+        let zones =  await prisma.zone.findMany({where: {warehouseId:idValue
         }});
-        return res.status(200).json(warehouses);
+        for(let z of zones)
+        {
+           let zId=z.id;
+
+           await prisma.zone.update({
+            where:{
+                id:zId
+            },
+             data:{remove:true}
+            });
+           
+            // await prisma.shelve.update({
+            //   where:{
+            //     zoneId:zId
+            //   },
+            //    data:{remove:true}
+            // });
+            let findShelve=await prisma.shelve.findMany({
+              where:{
+                zoneId:zId
+              }});
+             
+             for(let s of findShelve)
+             {
+                await prisma.shelve.update({
+                where:{
+                  id:s.id
+                },
+                  data:{remove:true}
+                });
+
+             }
+
+
+        }
+
+        try{
+        return res.status(200).json({ name: 'John Doe' })
+        }
+        catch(error){
+            console.error("error message:"+error);
+        }
+        }
+        else
+        {
+          let createData = await prisma.warehouse.create({data:{}});
+          warehouses =  await prisma.warehouse.findMany({where: {remove: false
+          }});
+          return res.status(200).json(warehouses);
+        }
     break;  
     case 'GET':
          

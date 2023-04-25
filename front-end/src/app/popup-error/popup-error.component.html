@@ -1,0 +1,17 @@
+
+<h2 mat-dialog-title>Error Alert Shelve Exist</h2>
+
+<mat-dialog-actions style="width:400px;height:200px">
+    <table >
+      <tr><th>name</th><th>warehouse</th><th>zone</th></tr>
+      <tr *ngFor="let error of errorStack">
+        <td >{{error.shelveName}}</td>
+        <td>{{error.warehouse}}</td>
+        <td>{{error.zoneId}}</td>
+      </tr>
+
+    </table>
+
+
+</mat-dialog-actions>
+<button mat-button  mat-raised-button color="red"  mat-dialog-close="false">Close</button>
