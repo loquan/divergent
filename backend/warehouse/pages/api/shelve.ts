@@ -42,10 +42,10 @@ export default async function handler(
         if(req.body.command=="DELETE")
         {
           let shelveIds =  JSON.parse( req.body.shelveIds);
-          
+          let  result2:any;
           for(let i=0;i<shelveIds.length;i++)
           {
-            const result2 = await prisma.shelve.update({
+            result2 = await prisma.shelve.update({
               where:{
                   id:shelveIds[i],                
               },
@@ -60,7 +60,7 @@ export default async function handler(
           return res.status(200).json(result2);
         }
         else if(req.body.command=="NEW") {
-          
+          //create new item
           ZoneId= parseInt( req.body.zoneId);
           let names:string[]=JSON.parse(req.body.shelveName);
 
@@ -152,13 +152,11 @@ export default async function handler(
               let id=parseInt(ids[index]);
 
                //find if any name exist
-               zones =  await prisma.shelve.findMany({where:{shelveName:name,remove: false},}) ; 
+               zones =  await prisma.shelve.findMany({where:{shelveName:name,remove: false,id:{not:id}}}) ; 
                let errorStack:any[]=[];
 
                //exclude current id
                for(let i=0;i<zones.length;i++){
-                  if(zones[i].id!=id)
-                  {
                       flag=true;
                       
                       let zone = await prisma.zone.findMany({where: {id:zones[i].zoneId,remove: false}})  ;
@@ -172,8 +170,7 @@ export default async function handler(
                       errorStack[i].id=zones[i].id;
                       errorStack[i].zoneId=ZoneNumber;
                       stackData.push(errorStack);
-                  }
-
+               
                }
               }
 
