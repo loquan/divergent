@@ -5,6 +5,6 @@ npm install
 npx prisma studio
 npm run dev
 
-frontend
+front-end
 npm install
 npm start
