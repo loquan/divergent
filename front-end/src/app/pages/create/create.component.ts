@@ -223,15 +223,20 @@ export class CreateComponent implements OnInit {
 
   }
   async saveAllShelve(warehouseIndex:number,zoneIndex:number){
+
     if(this.checkIfGroupAreSame(warehouseIndex,zoneIndex))
     {
+        //check update data can be saved
         await this.updateShelves(warehouseIndex,zoneIndex);
+
+        //check if new version can be saved, it won't save if it already exist
         await this.saveNewShelve(warehouseIndex,zoneIndex);
 
     }
 
   }
 
+  //this save one shevle only
   async saveShelve(warehouseIndex:number,zoneIndex:number,shelveIndex:number){
 
 
@@ -244,6 +249,7 @@ export class CreateComponent implements OnInit {
 
     names[0]=name;
     ids[0]=shelveId
+
     if(shelveId<=0)//new id
     {
      this.saveShelvesCheck(names,shelves,zoneId);
@@ -257,6 +263,7 @@ export class CreateComponent implements OnInit {
   }
 
 
+   //loops threw the list of items in shevles
    checkIfGroupAreSame(warehouseIndex:number,zoneIndex:number) {
 
 
